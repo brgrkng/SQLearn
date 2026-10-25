@@ -224,6 +224,7 @@ const ERROR_NAMES: Record<string, string> = {
   '428C9': 'a "cannot insert into a generated column" error', '22P02': 'an invalid input error',
   '22001': 'a "value too long" error', '22003': 'a numeric out-of-range error', '42P07': 'a "table already exists" error',
   '2BP01': 'a "dependent objects still exist" error', '42883': 'an undefined function error', '22007': 'an invalid date error',
+  'P0001': 'a raised exception', '44000': 'a WITH CHECK OPTION violation', '55000': 'an "object not in prerequisite state" error',
 }
 const errName = (code: string) => `${ERROR_NAMES[code] ?? 'an error'} (${code})`
 

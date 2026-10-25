@@ -52,7 +52,7 @@ How B-tree indexes work · reading EXPLAIN and EXPLAIN ANALYZE · seq, index, in
 ### 13. Transactions and concurrency ✅
 ACID · BEGIN/COMMIT/ROLLBACK, savepoints · MVCC: how PostgreSQL keeps old row versions · isolation levels and anomalies (dirty read, non-repeatable read, phantom, lost update, write skew) · row locks, SELECT … FOR UPDATE / SKIP LOCKED · deadlocks · optimistic concurrency. *Taught with step-through T1/T2 walkthroughs, since the in-browser database has a single connection.*
 
-### 14. Views, functions and triggers ⏳
+### 14. Views, functions and triggers ✅
 Views and updatable views · materialized views and refresh · SQL functions · PL/pgSQL: variables, control flow, exceptions · procedures · triggers (auditing, derived columns) and when not to use them.
 
 ### 15. Beyond relational: PostgreSQL power features ⏳
