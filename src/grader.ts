@@ -230,13 +230,14 @@ const errName = (code: string) => `${ERROR_NAMES[code] ?? 'an error'} (${code})`
 
 // What a check statement did: the SQLSTATE it failed with, or its (sorted) rows.
 type Outcome = { error?: string; rows: unknown[][] }
+// Each check starts as the superuser outside any transaction, whatever ran before it.
 async function outcome(db: PGlite, sql: string): Promise<Outcome> {
+  await db.exec('RESET ROLE').catch(() => {})
   const x = await exec(db, sql)
-  if (x.error) {
-    // A check that failed inside BEGIN ... COMMIT leaves the session in an aborted transaction.
-    await db.exec('ROLLBACK').catch(() => {})
-    return { error: x.error.code ?? 'XX000', rows: [] }
-  }
+  // A check that failed inside BEGIN ... COMMIT leaves the session in an aborted transaction.
+  if (x.error) await db.exec('ROLLBACK').catch(() => {})
+  await db.exec('RESET ROLE').catch(() => {})
+  if (x.error) return { error: x.error.code ?? 'XX000', rows: [] }
   return { rows: (lastQuery(x)?.rows ?? []).map(r => r.map(normValue)).sort((p, q) => (JSON.stringify(p) < JSON.stringify(q) ? -1 : 1)) }
 }
 

@@ -58,7 +58,7 @@ Views and updatable views · materialized views and refresh · SQL functions · 
 ### 15. Beyond relational: PostgreSQL power features ✅
 jsonb operators, jsonb_path, indexing JSON · arrays and unnest · range types · full-text search (tsvector, tsquery, ranking) · generate_series and calendar tables.
 
-### 16. Security and administration essentials ⏳
+### 16. Security and administration essentials ✅
 Roles, GRANT/REVOKE, default privileges · row-level security policies · SQL injection and parameterized queries · VACUUM, ANALYZE and bloat · pg_stat views for finding slow queries · **Overview only, with links:** backup and restore (pg_dump, PITR), replication, high availability, connection pooling, server configuration.
 
 ## Part IV: Practice
