@@ -18,7 +18,7 @@ Text functions (length, upper/lower, trim, substring, position, replace, split_p
 ### 3. Aggregation and grouping ✅
 count(*) vs count(col) vs count(DISTINCT) · sum/avg/min/max and NULL behaviour · GROUP BY rules · HAVING vs WHERE · FILTER clause · string_agg, array_agg, bool_and/bool_or · percentile_cont/mode (ordered-set aggregates) · GROUPING SETS, ROLLUP, CUBE · pivoting with conditional aggregation · **Cost:** HashAggregate vs GroupAggregate, filtering before grouping.
 
-### 4. Joins ⏳
+### 4. Joins ✅
 Why tables are split up · INNER JOIN, ON vs USING vs NATURAL · LEFT/RIGHT/FULL OUTER · conditions in ON vs WHERE with outer joins · CROSS JOIN · self-joins · joining many tables · semi-joins and anti-joins · fan-out: why joins duplicate rows, and why DISTINCT isn't the fix · non-equi joins · **Cost:** nested loop, hash join and merge join, indexing foreign keys.
 
 ### 5. Subqueries and set operations ⏳
