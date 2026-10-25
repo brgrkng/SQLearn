@@ -1,20 +1,15 @@
 // Grades every exercise's reference solution (must pass), its starter and its
 // known-wrong answers (must fail), and runs every lesson example.
+// One test file per module (test/modules) so vitest runs modules in parallel.
 import { describe, expect, it } from 'vitest'
 import { modules } from '../src/content'
-import { compareRows, grade, run } from '../src/grader'
-
-it('compares result sets', () => {
-  expect(compareRows([[1, 'a'], [2, 'b']], [[2, 'b'], [1, 'a']], false)).toBeNull()
-  expect(compareRows([[1, 'a'], [2, 'b']], [[2, 'b'], [1, 'a']], true)).toMatch(/Row 1 differs/)
-  expect(compareRows([['2.50']], [[2.5]], true)).toBeNull()
-  expect(compareRows([[1], [1]], [[1], [2]], false)).toMatch(/\(2\)/)
-  expect(compareRows([[1]], [], false)).toMatch(/Expected 1 row, got 0/)
-})
+import { grade, run } from '../src/grader'
 
 const LESSON_SQL = /^```sql([^\n]*)\n([\s\S]*?)^```[ \t]*$/gm
 
-for (const mod of modules) {
+export function testModule(id: string) {
+  const mod = modules.find(m => m.id === id)
+  if (!mod) throw new Error(`No module "${id}"`)
   describe(mod.id, () => {
     for (const item of mod.items) {
       const ex = item.exercise
@@ -33,7 +28,7 @@ for (const mod of modules) {
         const ok = await grade(ex, ex.solution)
         expect(ok.pass, ok.messages.join('\n')).toBe(true)
         // An empty expected result usually means the prompt references data that doesn't exist.
-        if (!ex.checks.length) expect(ok.expected?.rowCount, 'reference returns no rows').toBeGreaterThan(0)
+        if (!ex.checks.length && !ex.explain) expect(ok.expected?.rowCount, 'reference returns no rows').toBeGreaterThan(0)
         for (const sql of [item.starter, ...item.wrong].filter(Boolean)) {
           const v = await grade(ex, sql)
           expect(v.pass, `should fail:\n${sql}`).toBe(false)

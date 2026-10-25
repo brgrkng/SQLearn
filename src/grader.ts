@@ -238,11 +238,16 @@ export async function grade(ex: Exercise, sql: string): Promise<Verdict> {
         const limit = ref.cost * ex.maxCostRatio + COST_SLACK
         c = { yours: mine, reference: ref.cost, limit }
         efficient = mine <= limit
+      } else if (ex.explain) {
+        efficient = false
+        messages.push("The query this exercise measures couldn't run against your database. Did your SQL drop or rename something it needs?")
       }
     }
 
     let correct = true
-    if (ex.checks.length === 0) {
+    if (ex.checks.length === 0 && !ref.result) {
+      // Graded on cost alone, e.g. "add an index so this query is fast".
+    } else if (ex.checks.length === 0) {
       const mine = lastQuery(yours), want = ref.result!
       const problem = !mine
         ? 'Your SQL did not return a result to compare. Did you forget the SELECT?'
@@ -268,7 +273,7 @@ export async function grade(ex: Exercise, sql: string): Promise<Verdict> {
       }
     }
 
-    if (efficient === false) messages.push(`Your query's estimated cost is ${fmt(c!.yours)} vs ${fmt(c!.reference)} for the reference (limit ${fmt(c!.limit)}). It works, but there's a much cheaper plan.`)
+    if (efficient === false && c) messages.push(`${ex.explain ? 'The measured query' : 'Your query'}'s estimated cost is ${fmt(c!.yours)} vs ${fmt(c!.reference)} for the reference (limit ${fmt(c!.limit)}). It works, but there's a much cheaper plan.`)
     return verdict(correct, efficient, c)
   })
 }
