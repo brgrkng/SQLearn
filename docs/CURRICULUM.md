@@ -12,7 +12,7 @@ Status: ✅ written and tested · ⏳ planned
 SELECT and expressions, aliases, integer division, concatenation, identifiers vs literals · WHERE, comparison operators, AND/OR precedence, IN, BETWEEN, half-open date ranges, LIKE/ILIKE · NULL, three-valued logic, IS [NOT] DISTINCT FROM, coalesce · ORDER BY, NULLS FIRST/LAST, LIMIT/OFFSET, FETCH … WITH TIES, deterministic ordering · DISTINCT, DISTINCT ON · **Cost:** the planner, EXPLAIN, seq vs index scan, sargable predicates, keyset pagination.
 *7 lessons · 25 drills · 8-question test · 5 problems*
 
-### 2. Functions and expressions ⏳
+### 2. Functions and expressions ✅
 Text functions (length, upper/lower, trim, substring, position, replace, split_part, format, regexp_*) · numeric functions and rounding, numeric vs float · dates and times: date, timestamp, timestamptz, interval, date arithmetic, extract/date_part, date_trunc, time zones, generate_series · CASE (simple and searched) · casting, implicit conversions · NULL-handling functions (nullif, coalesce, greatest/least) · **Cost:** functions on columns, expression indexes (preview).
 
 ### 3. Aggregation and grouping ⏳
@@ -74,6 +74,6 @@ Design a schema from a written brief, load it, answer business questions against
 | Name | Used for | Status |
 |---|---|---|
 | `shop` | Querying, joins, aggregation, performance (50k orders, ~125k order lines) | ✅ |
-| `hr` | Self-joins, recursive hierarchies, windows over salaries | ⏳ |
-| `analytics` | Events, sessions and subscriptions for windows and interview problems | ⏳ |
+| `hr` | Self-joins, recursive hierarchies, windows over salaries (300 employees, 5 levels) | ✅ |
+| `analytics` | Events, subscriptions and referrals for time series, funnels, retention (2k users, 83k events) | ✅ |
 | `empty` | DDL, constraints and design exercises | ✅ (built in) |

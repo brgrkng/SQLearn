@@ -1,6 +1,8 @@
 // Runs learner SQL against disposable PGlite databases and grades it.
 // Environment-agnostic: used by the Web Worker in the app and by the content tests in Node.
 import { PGlite } from '@electric-sql/pglite'
+import { btree_gist } from '@electric-sql/pglite/contrib/btree_gist'
+import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
 
 const seeds = import.meta.glob('/datasets/*.sql', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
 const seedFor = (name: string): string | undefined => (name === 'empty' ? '' : seeds[`/datasets/${name}.sql`])
@@ -39,6 +41,8 @@ const COST_SLACK = 50
 // Return dates/times exactly as Postgres prints them instead of JS Dates.
 const asText = (s: string) => s
 const parsers = { 1082: asText, 1083: asText, 1114: asText, 1184: asText, 1186: asText, 1266: asText }
+// UTC everywhere (PGlite otherwise inherits the host's zone); extensions available to CREATE EXTENSION.
+const options = { parsers, postgresqlconf: "timezone = 'UTC'", extensions: { btree_gist, pg_trgm } }
 
 // --- databases --------------------------------------------------------------
 
@@ -51,7 +55,7 @@ function snapshot(dataset: string): Promise<Snapshot> {
   if (seed === undefined) return Promise.reject(new Error(`Unknown dataset "${dataset}"`))
   if (!snapshots.has(dataset)) {
     snapshots.set(dataset, (async () => {
-      const db = await PGlite.create()
+      const db = await PGlite.create(options)
       await db.exec(seed)
       await db.exec('ANALYZE')
       const schema = await readSchema(db)
@@ -86,7 +90,7 @@ export const schemaOf = async (dataset: string) => (await snapshot(dataset)).sch
 export function warm(dataset: string): Promise<PGlite> {
   if (spare?.dataset === dataset) return spare.db
   spare?.db.then(d => d.close(), () => {})
-  const db = snapshot(dataset).then(s => PGlite.create({ loadDataDir: s.blob, parsers }))
+  const db = snapshot(dataset).then(s => PGlite.create({ ...options, loadDataDir: s.blob }))
   db.catch(() => {})
   spare = { dataset, db }
   return db

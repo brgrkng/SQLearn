@@ -152,3 +152,6 @@ CROSS JOIN LATERAL (
   FROM generate_series(1, 1 + floor(random() * 4)::int + 0 * o.order_id)
 ) pick
 JOIN products p ON p.product_id = pick.product_id;
+
+-- Orders are routinely looked up by date.
+CREATE INDEX orders_order_date_idx ON orders (order_date);
