@@ -55,7 +55,7 @@ ACID · BEGIN/COMMIT/ROLLBACK, savepoints · MVCC: how PostgreSQL keeps old row 
 ### 14. Views, functions and triggers ✅
 Views and updatable views · materialized views and refresh · SQL functions · PL/pgSQL: variables, control flow, exceptions · procedures · triggers (auditing, derived columns) and when not to use them.
 
-### 15. Beyond relational: PostgreSQL power features ⏳
+### 15. Beyond relational: PostgreSQL power features ✅
 jsonb operators, jsonb_path, indexing JSON · arrays and unnest · range types · full-text search (tsvector, tsquery, ranking) · generate_series and calendar tables.
 
 ### 16. Security and administration essentials ⏳
