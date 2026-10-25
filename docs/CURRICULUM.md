@@ -49,7 +49,7 @@ Requirements to entities · ER diagrams and cardinality (1:1, 1:N, M:N, junction
 ### 12. Indexes and query performance ✅
 How B-tree indexes work · reading EXPLAIN and EXPLAIN ANALYZE · seq, index, index-only and bitmap scans · composite index column order · covering indexes (INCLUDE) · partial and expression indexes · GIN/GiST/BRIN, and when · statistics and ANALYZE · cardinality misestimates · join order · the cost of indexes on writes · anti-patterns: leading-wildcard LIKE, OR across columns, implicit casts, functions on columns, N+1 queries, SELECT * · partitioning. *Exercises: "make this query fast" by rewriting it or adding an index.*
 
-### 13. Transactions and concurrency ⏳
+### 13. Transactions and concurrency ✅
 ACID · BEGIN/COMMIT/ROLLBACK, savepoints · MVCC: how PostgreSQL keeps old row versions · isolation levels and anomalies (dirty read, non-repeatable read, phantom, lost update, write skew) · row locks, SELECT … FOR UPDATE / SKIP LOCKED · deadlocks · optimistic concurrency. *Taught with step-through T1/T2 walkthroughs, since the in-browser database has a single connection.*
 
 ### 14. Views, functions and triggers ⏳
