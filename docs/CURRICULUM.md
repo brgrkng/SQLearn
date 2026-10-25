@@ -35,7 +35,7 @@ OVER, PARTITION BY, ORDER BY · row_number, rank, dense_rank, ntile · running t
 ### 8. Modifying data ✅
 INSERT (multi-row, INSERT … SELECT, DEFAULT) · UPDATE (with FROM) · DELETE (with USING), TRUNCATE · RETURNING · upsert with ON CONFLICT · MERGE · bulk operations · **Cost:** set-based vs row-by-row updates.
 
-### 9. Data types and DDL ⏳
+### 9. Data types and DDL ✅
 CREATE TABLE · choosing types: integer sizes, numeric vs float, text vs varchar(n), boolean, date/time types, uuid, enum, arrays, jsonb (preview) · identity columns and sequences · DEFAULT, generated columns · ALTER TABLE, DROP, schemas · temporary tables.
 
 ### 10. Constraints and integrity ⏳

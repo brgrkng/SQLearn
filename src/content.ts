@@ -17,6 +17,7 @@ export type Item = {
   hints: string[]
   starter: string
   wrong: string[] // known-wrong answers; tests assert each one fails
+  cumulative: boolean // lesson examples build on the ones before them
   exercise?: Exercise
 }
 export type Module = { id: string; title: string; summary: string; intro: string; items: Item[] }
@@ -58,6 +59,7 @@ function parseItem(path: string, module: string, raw: string): Item {
     hints: meta.hints ?? [],
     starter: fences.starter[0] ?? '',
     wrong: fences.wrong,
+    cumulative: meta.cumulative ?? false,
   }
   if (kind !== 'lesson') {
     if (!fences.solution[0]) throw new Error(`${path}: exercise needs a \`\`\`sql solution block`)
@@ -72,6 +74,20 @@ function parseItem(path: string, module: string, raw: string): Item {
     }
   }
   return item
+}
+
+// Runnable ```sql blocks of a lesson (```sql norun stays static; ```sql error is expected to fail).
+// In a cumulative lesson each block's setup is every earlier block that isn't expected to fail.
+const LESSON_SQL = /^```sql([^\n]*)\n([\s\S]*?)^```[ \t]*$/gm
+export type Block = { sql: string; error: boolean; setup?: string; start: number; end: number }
+export function lessonBlocks(item: Item): Block[] {
+  const blocks: Block[] = []
+  for (const m of item.body.matchAll(LESSON_SQL)) {
+    if (m[1].includes('norun')) continue
+    const prior = item.cumulative ? blocks.filter(b => !b.error).map(b => b.sql).join(';\n') : ''
+    blocks.push({ sql: m[2].trim(), error: m[1].includes('error'), setup: prior || undefined, start: m.index!, end: m.index! + m[0].length })
+  }
+  return blocks
 }
 
 function load(): Module[] {

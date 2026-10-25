@@ -2,10 +2,8 @@
 // known-wrong answers (must fail), and runs every lesson example.
 // One test file per module (test/modules) so vitest runs modules in parallel.
 import { describe, expect, it } from 'vitest'
-import { modules } from '../src/content'
+import { lessonBlocks, modules } from '../src/content'
 import { grade, run } from '../src/grader'
-
-const LESSON_SQL = /^```sql([^\n]*)\n([\s\S]*?)^```[ \t]*$/gm
 
 export function testModule(id: string) {
   const mod = modules.find(m => m.id === id)
@@ -14,12 +12,12 @@ export function testModule(id: string) {
     for (const item of mod.items) {
       const ex = item.exercise
       if (!ex) {
-        const blocks = [...item.body.matchAll(LESSON_SQL)].filter(m => !m[1].includes('norun'))
+        const blocks = lessonBlocks(item)
         if (blocks.length) it(`${item.id}: examples run`, async () => {
-          for (const [, info, sql] of blocks) {
-            const out = await run(item.dataset, sql)
-            if (info.includes('error')) expect(out.error, sql).toBeDefined()
-            else expect(out.error?.message, sql).toBeUndefined()
+          for (const b of blocks) {
+            const out = await run(item.dataset, b.sql, b.setup)
+            if (b.error) expect(out.error, b.sql).toBeDefined()
+            else expect(out.error?.message, b.sql).toBeUndefined()
           }
         })
         continue

@@ -4,29 +4,26 @@ import { Editor } from './Editor'
 import { Output } from './Results'
 import { runSql } from './sql'
 import type { RunOutput, Table } from './grader'
-import type { Item } from './content'
+import { lessonBlocks, type Item } from './content'
 
 export const Markdown = ({ md }: { md: string }) => <div className="prose" dangerouslySetInnerHTML={{ __html: marked.parse(md) as string }} />
 
-// Lesson bodies alternate prose and runnable ```sql blocks (```sql norun stays static).
-const SQL_FENCE = /^```sql([^\n]*)\n([\s\S]*?)^```[ \t]*$/gm
-type Segment = { md: string } | { sql: string }
-function segments(body: string): Segment[] {
+type Segment = { md: string } | { sql: string; setup?: string }
+function segments(item: Item): Segment[] {
   const out: Segment[] = []
   let last = 0
-  for (const m of body.matchAll(SQL_FENCE)) {
-    if (m[1].includes('norun')) continue
-    out.push({ md: body.slice(last, m.index) }, { sql: m[2].trim() })
-    last = m.index! + m[0].length
+  for (const b of lessonBlocks(item)) {
+    out.push({ md: item.body.slice(last, b.start) }, { sql: b.sql, setup: b.setup })
+    last = b.end
   }
-  out.push({ md: body.slice(last) })
+  out.push({ md: item.body.slice(last) })
   return out
 }
 
 export function LessonView({ item, tables, done, onDone }: { item: Item; tables?: Table[]; done: boolean; onDone: () => void }) {
   return (
     <article className="lesson">
-      {segments(item.body).map((s, i) => ('md' in s ? <Markdown key={i} md={s.md} /> : <Runnable key={i} sql={s.sql} dataset={item.dataset} tables={tables} />))}
+      {segments(item).map((s, i) => ('md' in s ? <Markdown key={i} md={s.md} /> : <Runnable key={i} sql={s.sql} setup={s.setup} dataset={item.dataset} tables={tables} />))}
       <div className="lesson-foot">
         <button className="primary" onClick={onDone}>{done ? 'Next →' : 'Mark as read & continue →'}</button>
       </div>
@@ -34,7 +31,7 @@ export function LessonView({ item, tables, done, onDone }: { item: Item; tables?
   )
 }
 
-function Runnable({ sql: initial, dataset, tables }: { sql: string; dataset: string; tables?: Table[] }) {
+function Runnable({ sql: initial, setup, dataset, tables }: { sql: string; setup?: string; dataset: string; tables?: Table[] }) {
   const [sql, setSql] = useState(initial)
   const [key, setKey] = useState(0)
   const [out, setOut] = useState<RunOutput | null>(null)
@@ -45,7 +42,7 @@ function Runnable({ sql: initial, dataset, tables }: { sql: string; dataset: str
     setBusy(true)
     setError(null)
     try {
-      setOut(await runSql(dataset, sql))
+      setOut(await runSql(dataset, sql, setup))
     } catch (e: any) {
       setError(e.message)
     }
