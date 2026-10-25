@@ -24,7 +24,7 @@ Why tables are split up · INNER JOIN, ON vs USING vs NATURAL · LEFT/RIGHT/FULL
 ### 5. Subqueries and set operations ✅
 Scalar subqueries · IN / NOT IN (and the NULL trap) · EXISTS / NOT EXISTS · correlated subqueries · derived tables · LATERAL · ANY/ALL · UNION vs UNION ALL, INTERSECT, EXCEPT · **Cost:** correlated subquery vs join, NOT IN vs NOT EXISTS plans.
 
-### 6. Common table expressions ⏳
+### 6. Common table expressions ✅
 WITH for readability · chaining CTEs · MATERIALIZED / NOT MATERIALIZED · recursive CTEs: hierarchies (category trees, org charts), generating series, graph walks, cycle detection · **Cost:** CTE inlining, recursion depth.
 
 ### 7. Window functions ⏳
