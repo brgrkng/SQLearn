@@ -14,3 +14,12 @@ it('has a test file for every module', () => {
   const files = Object.keys(import.meta.glob('./modules/*.test.ts')).map(f => f.replace(/^.*\/|\.test\.ts$/g, ''))
   expect(files.sort()).toEqual(modules.map(m => m.id).sort())
 })
+
+it('finds the last statement of a script', async () => {
+  const { lastStatement } = await import('../src/grader')
+  expect(lastStatement('SELECT 1')).toBe('SELECT 1')
+  expect(lastStatement('CREATE INDEX i ON t (a); SELECT 2;')).toBe('SELECT 2')
+  expect(lastStatement("SELECT ';' AS x; -- trailing; comment")).toBe("SELECT ';' AS x")
+  expect(lastStatement('CREATE FUNCTION f() RETURNS int AS $$ SELECT 1; $$ LANGUAGE sql; SELECT f()')).toBe('SELECT f()')
+  expect(lastStatement('SELECT 1; /* a; b */')).toBe('SELECT 1')
+})

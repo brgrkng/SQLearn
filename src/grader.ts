@@ -22,6 +22,7 @@ export type Exercise = {
   ordered: boolean
   columnNames: boolean
   maxCostRatio: number | null
+  costSlack?: number
 }
 
 export type Verdict = {
@@ -35,7 +36,7 @@ export type Verdict = {
 }
 
 const DISPLAY_ROWS = 500
-// ponytail: fixed cost slack so tiny tables never fail on planner noise; per-exercise ratio covers the rest.
+// ponytail: fixed cost slack so tiny tables never fail on planner noise; exercises can lower it (costSlack).
 const COST_SLACK = 50
 
 // Return dates/times exactly as Postgres prints them instead of JS Dates.
@@ -57,7 +58,8 @@ function snapshot(dataset: string): Promise<Snapshot> {
     snapshots.set(dataset, (async () => {
       const db = await PGlite.create(options)
       await db.exec(seed)
-      await db.exec('ANALYZE')
+      await db.exec('VACUUM ANALYZE') // like a maintained production database: stats and visibility map
+
       const schema = await readSchema(db)
       const blob = await db.dumpDataDir('none')
       await db.close()
@@ -137,9 +139,38 @@ const display = (s: Full): ResultSet => ({ ...s, rows: s.rows.slice(0, DISPLAY_R
 const output = (x: Executed, cost?: number): RunOutput => ({ results: x.sets.map(display), error: x.error, cost })
 const lastQuery = (x: Executed) => [...x.sets].reverse().find(s => s.columns.length > 0)
 
+// The last statement of a script, skipping semicolons inside quotes, dollar quotes and comments.
+export function lastStatement(sql: string): string {
+  const statements: string[] = []
+  let start = 0, i = 0
+  while (i < sql.length) {
+    const c = sql[i], rest = sql.slice(i)
+    if (c === "'" || c === '"') {
+      const end = sql.indexOf(c, i + 1)
+      i = end < 0 ? sql.length : end + 1
+    } else if (rest.startsWith('--')) {
+      const end = sql.indexOf('\n', i)
+      i = end < 0 ? sql.length : end + 1
+    } else if (rest.startsWith('/*')) {
+      const end = sql.indexOf('*/', i + 2)
+      i = end < 0 ? sql.length : end + 2
+    } else if (c === '$' && /^\$[A-Za-z_]*\$/.test(rest)) {
+      const tag = rest.match(/^\$[A-Za-z_]*\$/)![0]
+      const end = sql.indexOf(tag, i + tag.length)
+      i = end < 0 ? sql.length : end + tag.length
+    } else if (c === ';') {
+      statements.push(sql.slice(start, i))
+      start = ++i
+    } else i++
+  }
+  statements.push(sql.slice(start))
+  const meaningful = statements.filter(s => s.replace(/--[^\n]*|\/\*[\s\S]*?\*\//g, '').trim())
+  return (meaningful.at(-1) ?? '').trim()
+}
+
 async function cost(db: PGlite, sql: string): Promise<number | undefined> {
   try {
-    const r = await db.query<{ 'QUERY PLAN': { Plan: { 'Total Cost': number } }[] }>(`EXPLAIN (FORMAT JSON) ${sql.trim().replace(/;\s*$/, '')}`)
+    const r = await db.query<{ 'QUERY PLAN': { Plan: { 'Total Cost': number } }[] }>(`EXPLAIN (FORMAT JSON) ${lastStatement(sql)}`)
     return r.rows[0]['QUERY PLAN'][0].Plan['Total Cost']
   } catch {
     return undefined // several statements, or a statement EXPLAIN can't take
@@ -246,7 +277,7 @@ export async function grade(ex: Exercise, sql: string): Promise<Verdict> {
     if (ex.maxCostRatio !== null && ref.cost !== undefined) {
       const mine = await cost(db, ex.explain ?? sql)
       if (mine !== undefined) {
-        const limit = ref.cost * ex.maxCostRatio + COST_SLACK
+        const limit = ref.cost * ex.maxCostRatio + (ex.costSlack ?? COST_SLACK)
         c = { yours: mine, reference: ref.cost, limit }
         efficient = mine <= limit
       } else if (ex.explain) {

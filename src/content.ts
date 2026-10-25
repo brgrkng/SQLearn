@@ -70,6 +70,7 @@ function parseItem(path: string, module: string, raw: string): Item {
       explain: fences.explain[0],
       ordered: meta.ordered ?? false,
       columnNames: meta.columnNames ?? false,
+      costSlack: meta.costSlack,
       maxCostRatio: meta.maxCostRatio === false || meta.maxCostRatio === null ? null : (meta.maxCostRatio ?? 2),
     }
   }
