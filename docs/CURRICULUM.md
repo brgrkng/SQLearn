@@ -15,7 +15,7 @@ SELECT and expressions, aliases, integer division, concatenation, identifiers vs
 ### 2. Functions and expressions ✅
 Text functions (length, upper/lower, trim, substring, position, replace, split_part, format, regexp_*) · numeric functions and rounding, numeric vs float · dates and times: date, timestamp, timestamptz, interval, date arithmetic, extract/date_part, date_trunc, time zones, generate_series · CASE (simple and searched) · casting, implicit conversions · NULL-handling functions (nullif, coalesce, greatest/least) · **Cost:** functions on columns, expression indexes (preview).
 
-### 3. Aggregation and grouping ⏳
+### 3. Aggregation and grouping ✅
 count(*) vs count(col) vs count(DISTINCT) · sum/avg/min/max and NULL behaviour · GROUP BY rules · HAVING vs WHERE · FILTER clause · string_agg, array_agg, bool_and/bool_or · percentile_cont/mode (ordered-set aggregates) · GROUPING SETS, ROLLUP, CUBE · pivoting with conditional aggregation · **Cost:** HashAggregate vs GroupAggregate, filtering before grouping.
 
 ### 4. Joins ⏳
