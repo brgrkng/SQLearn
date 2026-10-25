@@ -38,7 +38,7 @@ INSERT (multi-row, INSERT … SELECT, DEFAULT) · UPDATE (with FROM) · DELETE (
 ### 9. Data types and DDL ✅
 CREATE TABLE · choosing types: integer sizes, numeric vs float, text vs varchar(n), boolean, date/time types, uuid, enum, arrays, jsonb (preview) · identity columns and sequences · DEFAULT, generated columns · ALTER TABLE, DROP, schemas · temporary tables.
 
-### 10. Constraints and integrity ⏳
+### 10. Constraints and integrity ✅
 NOT NULL · PRIMARY KEY (natural vs surrogate keys) · UNIQUE (and NULLs) · FOREIGN KEY with ON DELETE/UPDATE actions · CHECK · exclusion constraints · deferrable constraints · enforcing business rules in the database instead of the application. *Graded by behaviour checks (inserts that must succeed or fail).*
 
 ### 11. Database design and normalization ⏳
