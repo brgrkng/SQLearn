@@ -66,7 +66,7 @@ Roles, GRANT/REVOKE, default privileges · row-level security policies · SQL in
 ### 17. Interview problem sets ✅
 43 original problems in three tiers (13 easy, 18 medium, 12 hard), covering the patterns interviewers ask about: second-highest value, duplicates, top-N per group, running totals, consecutive streaks, gaps and islands, median, retention and cohorts, funnels, year-over-year growth, sessionization, pivots, hierarchy walks, and "find the bug in this query".
 
-### 18. Capstone ⏳
+### 18. Capstone ✅
 Design a schema from a written brief, load it, answer business questions against it, and tune the slowest queries.
 
 ## Datasets
@@ -76,4 +76,5 @@ Design a schema from a written brief, load it, answer business questions against
 | `shop` | Querying, joins, aggregation, performance (50k orders, ~125k order lines) | ✅ |
 | `hr` | Self-joins, recursive hierarchies, windows over salaries (300 employees, 5 levels) | ✅ |
 | `analytics` | Events, subscriptions and referrals for time series, funnels, retention (2k users, 83k events) | ✅ |
+| `bikeshare` | Capstone: stations, bikes, members, 60k trips (Apr–Sep 2025) | ✅ |
 | `empty` | DDL, constraints and design exercises | ✅ (built in) |
