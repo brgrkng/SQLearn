@@ -41,7 +41,7 @@ CREATE TABLE · choosing types: integer sizes, numeric vs float, text vs varchar
 ### 10. Constraints and integrity ✅
 NOT NULL · PRIMARY KEY (natural vs surrogate keys) · UNIQUE (and NULLs) · FOREIGN KEY with ON DELETE/UPDATE actions · CHECK · exclusion constraints · deferrable constraints · enforcing business rules in the database instead of the application. *Graded by behaviour checks (inserts that must succeed or fail).*
 
-### 11. Database design and normalization ⏳
+### 11. Database design and normalization ✅
 Requirements to entities · ER diagrams and cardinality (1:1, 1:N, M:N, junction tables) · functional dependencies · anomalies (insert, update, delete) · 1NF, 2NF, 3NF, BCNF, with 4NF briefly · when and how to denormalize · modelling patterns: hierarchies, history/audit tables, soft deletes, polymorphic associations (and their alternatives), EAV and why to avoid it · naming conventions · design case studies (library, booking system, marketplace). *Exercises: build schemas that pass behaviour checks.*
 
 ## Part III: Performance and production SQL
