@@ -32,7 +32,7 @@ OVER, PARTITION BY, ORDER BY · row_number, rank, dense_rank, ntile · running t
 
 ## Part II: Changing data and designing databases
 
-### 8. Modifying data ⏳
+### 8. Modifying data ✅
 INSERT (multi-row, INSERT … SELECT, DEFAULT) · UPDATE (with FROM) · DELETE (with USING), TRUNCATE · RETURNING · upsert with ON CONFLICT · MERGE · bulk operations · **Cost:** set-based vs row-by-row updates.
 
 ### 9. Data types and DDL ⏳
