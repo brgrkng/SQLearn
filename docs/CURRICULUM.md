@@ -21,7 +21,7 @@ count(*) vs count(col) vs count(DISTINCT) · sum/avg/min/max and NULL behaviour 
 ### 4. Joins ✅
 Why tables are split up · INNER JOIN, ON vs USING vs NATURAL · LEFT/RIGHT/FULL OUTER · conditions in ON vs WHERE with outer joins · CROSS JOIN · self-joins · joining many tables · semi-joins and anti-joins · fan-out: why joins duplicate rows, and why DISTINCT isn't the fix · non-equi joins · **Cost:** nested loop, hash join and merge join, indexing foreign keys.
 
-### 5. Subqueries and set operations ⏳
+### 5. Subqueries and set operations ✅
 Scalar subqueries · IN / NOT IN (and the NULL trap) · EXISTS / NOT EXISTS · correlated subqueries · derived tables · LATERAL · ANY/ALL · UNION vs UNION ALL, INTERSECT, EXCEPT · **Cost:** correlated subquery vs join, NOT IN vs NOT EXISTS plans.
 
 ### 6. Common table expressions ⏳

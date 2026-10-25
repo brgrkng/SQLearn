@@ -85,6 +85,9 @@ JOIN (
 ) s USING (department_id)
 WHERE d.department_id BETWEEN 2 AND 9;
 
+-- Two heads share the second-highest salary (makes "nth highest" questions honest).
+UPDATE employees SET salary = (SELECT salary FROM employees WHERE employee_id = 2) WHERE employee_id = 8;
+
 -- Level 2: three managers per department, 10-33.
 INSERT INTO employees
 SELECT id, fn, ln, lower(fn || '.' || ln) || id || '@acme.example',
