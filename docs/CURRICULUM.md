@@ -27,7 +27,7 @@ Scalar subqueries · IN / NOT IN (and the NULL trap) · EXISTS / NOT EXISTS · c
 ### 6. Common table expressions ✅
 WITH for readability · chaining CTEs · MATERIALIZED / NOT MATERIALIZED · recursive CTEs: hierarchies (category trees, org charts), generating series, graph walks, cycle detection · **Cost:** CTE inlining, recursion depth.
 
-### 7. Window functions ⏳
+### 7. Window functions ✅
 OVER, PARTITION BY, ORDER BY · row_number, rank, dense_rank, ntile · running totals and moving averages · frames: ROWS vs RANGE vs GROUPS, frame exclusion · lag/lead, first_value/last_value/nth_value · top-N per group · gaps and islands · sessionization · percent_rank, cume_dist · WINDOW clause · **Cost:** sorts for windows, one window vs several.
 
 ## Part II: Changing data and designing databases
