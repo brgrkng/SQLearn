@@ -114,3 +114,8 @@ function load(): Module[] {
 export const modules = load()
 export const items = modules.flatMap(m => m.items)
 export const itemById = new Map(items.map(i => [i.id, i]))
+// IDs key progress, so two files with the same slug in a module would collide.
+if (itemById.size !== items.length) {
+  const dupes = items.filter((it, n) => items.findIndex(o => o.id === it.id) !== n).map(i => i.id)
+  throw new Error(`Duplicate item ids: ${dupes.join(', ')}`)
+}

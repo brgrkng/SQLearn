@@ -42,12 +42,12 @@ Settings → Pages → Source: **GitHub Actions**. After that, every push to `ma
 ```
 content/<NN-module>/_module.md     title + summary (frontmatter), intro (body)
 content/<NN-module>/<NN-item>.md   one lesson or exercise
-datasets/<name>.sql                seed script for a dataset (`dataset:` in frontmatter, default shop; `empty` = blank database)
+datasets/<name>.sql                seed script for a dataset: shop (default), hr, analytics, bikeshare; `empty` = blank database
 ```
 
 Numeric prefixes set the order and are dropped from IDs: `01-select-basics/09-where-equals.md` becomes `select-basics/where-equals`. Progress is keyed by ID, so **don't rename a file once it's live**. Renumbering is fine.
 
-**Lessons** (`kind: lesson`) are Markdown. Every ` ```sql ` block becomes a runnable, editable example. Use ` ```sql norun ` for static code, such as other dialects, and ` ```sql error ` for an example that is meant to fail. Put dialect notes in blockquotes starting `**Dialect note.**`.
+**Lessons** (`kind: lesson`) are Markdown. Every ` ```sql ` block becomes a runnable, editable example. Use ` ```sql norun ` for static code, such as other dialects, and ` ```sql error ` for an example that is meant to fail. Put dialect notes in blockquotes starting `**Dialect note.**`. Each example runs on a fresh database. With `cumulative: true` in the frontmatter, every earlier example (except `error` ones) runs first, so DDL lessons can build up step by step.
 
 **Exercises** (`kind: drill | test | problem`). The body is the prompt. Code blocks with a role are pulled out of the prompt:
 
@@ -62,8 +62,8 @@ Numeric prefixes set the order and are dropped from IDs: `01-select-basics/09-wh
 
 Everything after a `## Explanation` heading is shown once the exercise is passed.
 
-Frontmatter: `title`, `kind`, `dataset`, `difficulty` (easy/medium/hard, for problems), `ordered: true` (row order matters), `columnNames: true` (column names must match), `maxCostRatio` (default `2`; `false` turns off the efficiency check), `hints` (a list, revealed one at a time).
+Frontmatter: `title`, `kind`, `dataset`, `difficulty` (easy/medium/hard, for problems), `ordered: true` (row order matters), `columnNames: true` (column names must match), `maxCostRatio` (default `2`; `false` turns off the efficiency check), `costSlack` (default `50`; lower it for index exercises on small tables), `hints` (a list, revealed one at a time).
 
-**Grading.** With no `check` blocks, the last result set of the learner's SQL is compared with the reference's: same number of columns, the same multiset of rows (in order if `ordered`), with numbers compared by value. With `check` blocks, the learner's SQL and the reference each run on their own fresh database, then each check runs on both. Every check must produce the same rows, or fail with the same SQLSTATE (e.g. `23505` unique violation). This is how schema and design tasks are graded by behaviour. Efficiency passes when the learner's `EXPLAIN` total cost is at most `maxCostRatio × reference + 50`.
+**Grading.** With no `check` blocks, the last result set of the learner's SQL is compared with the reference's: same number of columns, the same multiset of rows (in order if `ordered`), with numbers compared by value. With `check` blocks, the learner's SQL and the reference each run on their own fresh database, then each check runs on both. Every check must produce the same rows, or fail with the same SQLSTATE (e.g. `23505` unique violation). This is how schema and design tasks are graded by behaviour. Efficiency passes when the learner's `EXPLAIN` total cost is at most `maxCostRatio × reference + costSlack`. The cost measured is the `explain` block's query if there is one, otherwise the **last statement** of the learner's SQL. An exercise whose reference returns no rows and has no checks (typically `CREATE INDEX ...` plus an `explain` block) is graded on cost alone. Every check starts as the superuser outside any transaction, so `SET ROLE` or a failed `BEGIN` in one check can't affect the next. Item IDs must be unique within a module, and the loader refuses duplicates.
 
 **Datasets are frozen.** Content refers to real values (emails, dates, IDs) in the generated data. Changing a seed script changes that data, so run `npm test` afterwards. A reference that returns no rows fails the tests, which catches most stale references.

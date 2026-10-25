@@ -60,7 +60,7 @@ export function ExerciseView({ item, entry, tables, onResult, onNext }: Props) {
         <Markdown md={item.body} />
         {ex.checks.length > 0 && <p className="note">Graded by running checks against your database after your SQL runs.</p>}
         {ex.maxCostRatio !== null && <p className="note">Must also be efficient: estimated cost within {ex.maxCostRatio}× the reference solution.</p>}
-        {ex.setup && <details className="schema" open><summary>Setup (already run before your SQL)</summary><pre><code>{ex.setup}</code></pre></details>}
+        {ex.setup && <details className="schema" open={ex.setup.split('\n').length <= 8}><summary>Setup (already run before your SQL)</summary><pre><code>{ex.setup}</code></pre></details>}
         {item.hints.length > 0 && (
           <div className="hints">
             {item.hints.slice(0, hints).map((h, i) => <div key={i} className="hint"><b>Hint {i + 1}.</b> <Markdown md={h} /></div>)}
