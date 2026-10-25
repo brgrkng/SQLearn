@@ -63,8 +63,8 @@ Roles, GRANT/REVOKE, default privileges · row-level security policies · SQL in
 
 ## Part IV: Practice
 
-### 17. Interview problem sets ⏳
-About 60 original problems in three tiers, covering the patterns interviewers ask about: second-highest value, duplicates, top-N per group, running totals, consecutive streaks, gaps and islands, median, retention and cohorts, funnels, year-over-year growth, sessionization, pivots, hierarchy walks, and "find the bug in this query".
+### 17. Interview problem sets ✅
+43 original problems in three tiers (13 easy, 18 medium, 12 hard), covering the patterns interviewers ask about: second-highest value, duplicates, top-N per group, running totals, consecutive streaks, gaps and islands, median, retention and cohorts, funnels, year-over-year growth, sessionization, pivots, hierarchy walks, and "find the bug in this query".
 
 ### 18. Capstone ⏳
 Design a schema from a written brief, load it, answer business questions against it, and tune the slowest queries.
